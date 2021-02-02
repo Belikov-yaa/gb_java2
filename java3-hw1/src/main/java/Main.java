@@ -16,7 +16,7 @@ public class Main {
         appleBox1.addFruits(3, Apple::new);
 
         Box<Orange> orangeBox = new Box<>();
-        orangeBox.addFruits(5, Orange::new);
+        orangeBox.addFruits(4, Orange::new);
 
         System.out.println(orangeBox.compareBox(appleBox));
         System.out.println(appleBox.compareBox(appleBox1));
