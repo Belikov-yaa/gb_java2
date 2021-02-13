@@ -3,14 +3,13 @@ import java.util.concurrent.*;
 public class MainClass {
 
     public static final int CARS_COUNT = 4;
-    public static CyclicBarrier cb = new CyclicBarrier(CARS_COUNT);
-    public static CountDownLatch countDownLatch = new CountDownLatch(CARS_COUNT);
 
     public static void main(String[] args) {
         ExecutorService executorService = Executors.newFixedThreadPool(CARS_COUNT);
 
         System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Подготовка!!!");
         Race race = new Race(new Road(60), new Tunnel(CARS_COUNT / 2), new Road(40));
+        race.setCountDown(CARS_COUNT);
         Car[] cars = new Car[CARS_COUNT];
         for (int i = 0; i < cars.length; i++) {
             cars[i] = new Car(race, 20 + (int) (Math.random() * 10));
@@ -21,7 +20,7 @@ public class MainClass {
         }
 
         try {
-            countDownLatch.await();
+            race.countDownLatch.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -29,7 +28,11 @@ public class MainClass {
         System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка началась!!!");
 
         executorService.shutdown();
-        while (!executorService.isTerminated());
+        try {
+            executorService.awaitTermination(20, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка закончилась!!!");
     }
