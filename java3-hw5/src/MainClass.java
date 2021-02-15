@@ -27,7 +27,14 @@ public class MainClass {
 
         System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка началась!!!");
 
+        try {
+            race.cb.await();
+        } catch (InterruptedException | BrokenBarrierException e) {
+            e.printStackTrace();
+        }
+
         executorService.shutdown();
+
         try {
             executorService.awaitTermination(20, TimeUnit.SECONDS);
         } catch (InterruptedException e) {

@@ -12,11 +12,14 @@ public class Race {
     public CountDownLatch countDownLatch;
 
     public void setCountDown(int countDown) {
-        this.cb = new CyclicBarrier(countDown);
+        this.cb = new CyclicBarrier(1 + countDown);
         this.countDownLatch = new CountDownLatch(countDown);
     }
 
-    public ArrayList<Stage> getStages() { return stages; }
+    public ArrayList<Stage> getStages() {
+        return stages;
+    }
+
     public Race(Stage... stages) {
         this.stages = new ArrayList<>(Arrays.asList(stages));
     }
