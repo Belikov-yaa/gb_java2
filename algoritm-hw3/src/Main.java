@@ -39,4 +39,19 @@ public class Main {
         mpq.insert(6);
         System.out.println(mpq);
     }
+
+    public static String reversString(String inputString) {
+        // Можно обойтись и без использования стека, если во втором цикле перебирать элементы строки с последнего до первого
+
+        MyStack<Character> myStack = new MyStack<>(inputString.length());
+        for (int i = 0; i < inputString.length(); i++) {
+            myStack.push(inputString.charAt(i));
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < inputString.length(); i++) {
+            sb.append(myStack.pop());
+        }
+        return sb.toString();
+    }
 }

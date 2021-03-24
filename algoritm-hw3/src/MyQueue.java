@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class MyQueue<T> {
@@ -37,7 +36,7 @@ public class MyQueue<T> {
     public void insert(T item) throws IllegalStateException {
         if (isFull()) {
             //реализовать расширение массива
-            throw new IllegalStateException("Очередь заполнена");
+//            throw new IllegalStateException("Очередь заполнена");
         }
         size++;
         list[end] = item;
@@ -74,6 +73,14 @@ public class MyQueue<T> {
 
     private int nextIndex(int index) {
         return (index + 1) % list.length;
+    }
+
+    private void expandCapacity() {
+        capacity += DEFAULT_CAPACITY;
+        T[] newList = (T[]) new Comparable[capacity];
+        System.arraycopy(list, begin, newList, 0, size-begin);
+        if (begin>0) System.arraycopy(list, 0, newList, size-begin, begin);
+        list = newList;
     }
 
     @Override
