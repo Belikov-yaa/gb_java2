@@ -21,8 +21,8 @@ public class MyStack<T> {
 
     public void push(T item) {
         if (isFull()) {
-            //реализовать расширение массива
-            throw new StackOverflowError("Стек заполнен");
+            expandCapacity();
+//            throw new StackOverflowError("Стек заполнен");
         }
         list[size]= item;
         size++;
@@ -42,6 +42,12 @@ public class MyStack<T> {
         return list[size-1];
     }
 
+    private void expandCapacity() {
+        capacity += DEFAULT_CAPACITY;
+        T[] newList = (T[]) new Comparable[capacity];
+        System.arraycopy(list, 0, newList, 0, size);
+        list = newList;
+    }
 
     public boolean isFull() {
         return size == list.length;

@@ -35,7 +35,7 @@ public class MyQueue<T> {
      */
     public void insert(T item) throws IllegalStateException {
         if (isFull()) {
-            //реализовать расширение массива
+            expandCapacity();
 //            throw new IllegalStateException("Очередь заполнена");
         }
         size++;
@@ -78,8 +78,10 @@ public class MyQueue<T> {
     private void expandCapacity() {
         capacity += DEFAULT_CAPACITY;
         T[] newList = (T[]) new Comparable[capacity];
-        System.arraycopy(list, begin, newList, 0, size-begin);
-        if (begin>0) System.arraycopy(list, 0, newList, size-begin, begin);
+        System.arraycopy(list, begin, newList, 0, size - begin);
+        if (begin > 0) System.arraycopy(list, 0, newList, size - begin, begin);
+        begin = 0;
+        end = size;
         list = newList;
     }
 
@@ -87,11 +89,11 @@ public class MyQueue<T> {
     public String toString() {
         StringBuilder sb = new StringBuilder("[ ");
         int i = begin;
-        while (i != end) {
-            sb.append(list[i]).append(", ");
-            i = nextIndex(i);
-        }
         if (size > 0) {
+            do {
+                sb.append(list[i]).append(", ");
+                i = nextIndex(i);
+            } while (i != end);
             sb.setLength(sb.length() - 2);
         }
         sb.append(" ]");

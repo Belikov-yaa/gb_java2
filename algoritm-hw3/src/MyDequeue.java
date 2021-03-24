@@ -35,8 +35,8 @@ public class MyDequeue<T> {
      */
     public void insertLeft(T item) throws IllegalStateException {
         if (isFull()) {
-            //реализовать расширение массива
-            throw new IllegalStateException("Очередь заполнена");
+            expandCapacity();
+//            throw new IllegalStateException("Очередь заполнена");
         }
         size++;
         left = prevIndex(left);
@@ -45,8 +45,8 @@ public class MyDequeue<T> {
 
     public void insertRight(T item) throws IllegalStateException {
         if (isFull()) {
-            //реализовать расширение массива
-            throw new IllegalStateException("Очередь заполнена");
+            expandCapacity();
+//            throw new IllegalStateException("Очередь заполнена");
         }
         size++;
         list[right] = item;
@@ -104,15 +104,25 @@ public class MyDequeue<T> {
         return (index - 1) < 0 ? list.length - 1 : index - 1;
     }
 
+    private void expandCapacity() {
+        capacity += DEFAULT_CAPACITY;
+        T[] newList = (T[]) new Comparable[capacity];
+        System.arraycopy(list, left, newList, 0, size - left);
+        if (left > 0) System.arraycopy(list, 0, newList, size - left, left);
+        left = 0;
+        right = size;
+        list = newList;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("[ ");
         int i = left;
-        while (i != right) {
-            sb.append(list[i]).append(", ");
-            i = nextIndex(i);
-        }
         if (size > 0) {
+            do {
+                sb.append(list[i]).append(", ");
+                i = nextIndex(i);
+            } while (i != right);
             sb.setLength(sb.length() - 2);
         }
         sb.append(" ]");

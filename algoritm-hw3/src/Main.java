@@ -15,29 +15,53 @@ public class Main {
 //        System.out.println(expression.checkBracket());
 
 //        MyQueue<Integer> myQueue = new MyQueue<>();
-//        for (int i = 0; i < 5; i++) {
+//        for (int i = 0; i < 15; i++) {
 //            myQueue.insert(i*10);
 //        }
 //        System.out.println(myQueue);
 //
 //        for (int i = 0; i < 5; i++) {
-//            System.out.print(myQueue.remove());
+//            System.out.print(myQueue.remove()+ " ");
+//        }
+//        System.out.println(myQueue);
+//
+//        for (int i = 0; i < 11; i++) {
+//            myQueue.insert(i*10);
 //        }
 //        System.out.println(myQueue);
 
-        MyPriorityQueue<Integer> mpq = new MyPriorityQueue<>();
-        mpq.insert(5);
-        mpq.insert(1);
-        mpq.insert(3);
-        mpq.insert(4);
-        mpq.insert(7);
-        mpq.insert(2);
+        MyDequeue<Integer> myDequeue = new MyDequeue<>(5);
+        for (int i = 0; i < 15; i++) {
+            if (i%2 == 0)
+                myDequeue.insertLeft(i*3);
+            else
+                myDequeue.insertRight(i*2);
+        }
+        System.out.println(myDequeue);
 
-        System.out.println(mpq);
-        System.out.println(mpq.remove());
-        System.out.println(mpq);
-        mpq.insert(6);
-        System.out.println(mpq);
+        for (int i = 0; i < 6; i++) {
+            System.out.print(myDequeue.removeLeft()+" ");
+        }
+        System.out.println(myDequeue);
+
+        for (int i = 0; i < 7; i++) {
+            System.out.print(myDequeue.removeRight()+" ");
+        }
+        System.out.println(myDequeue);
+
+//        MyPriorityQueue<Integer> mpq = new MyPriorityQueue<>();
+//        mpq.insert(5);
+//        mpq.insert(1);
+//        mpq.insert(3);
+//        mpq.insert(4);
+//        mpq.insert(7);
+//        mpq.insert(2);
+//
+//        System.out.println(mpq);
+//        System.out.println(mpq.remove());
+//        System.out.println(mpq);
+//        mpq.insert(6);
+//        System.out.println(mpq);
     }
 
     public static String reversString(String inputString) {
