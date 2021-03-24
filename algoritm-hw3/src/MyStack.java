@@ -44,9 +44,7 @@ public class MyStack<T> {
 
     private void expandCapacity() {
         capacity += DEFAULT_CAPACITY;
-        T[] newList = (T[]) new Comparable[capacity];
-        System.arraycopy(list, 0, newList, 0, size);
-        list = newList;
+        reCapacity(capacity);
     }
 
     public boolean isFull() {
