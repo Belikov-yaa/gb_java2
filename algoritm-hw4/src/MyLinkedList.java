@@ -20,6 +20,8 @@ public class MyLinkedList<T> implements Iterable<T> {
 
     private class Iter implements Iterator<T> {
         Node current = new Node(null, first);
+        Node prevNode;
+        int nextIndex;
 
         @Override
         public boolean hasNext() {
@@ -28,25 +30,14 @@ public class MyLinkedList<T> implements Iterable<T> {
 
         @Override
         public T next() {
+            prevNode = current;
             current = current.getNext();
+            nextIndex++;
             return current.getValue();
         }
     }
 
     private class ListIter extends Iter implements ListIterator<T> {
-        private int nextIndex;
-        private Node lastReturned;
-        private Node next;
-
-        @Override
-        public T next() {
-            if (!hasNext())
-                throw new NoSuchElementException();
-            lastReturned = next;
-            next = next.next;
-            nextIndex++;
-            return lastReturned.value;
-        }
 
         @Override
         public boolean hasPrevious() {
@@ -56,9 +47,10 @@ public class MyLinkedList<T> implements Iterable<T> {
         @Override
         public T previous() {
             if (!hasPrevious()) throw new NoSuchElementException();
-            lastReturned = next = (next == null) ? last : next.prev;
+            prevNode = current;
+            current = current.getPrev();
             nextIndex--;
-            return lastReturned.value;
+            return current.getValue();
         }
 
         @Override
@@ -74,24 +66,61 @@ public class MyLinkedList<T> implements Iterable<T> {
         //удаляет элемент который прошли методом next или prev
         @Override
         public void remove() {
-            if (lastReturned == null)
+            if (prevNode == null)
                 throw new IllegalStateException();
-//            if (lastReturned.next != null)
-
-
+            if (prevNode.getNext() == current.getPrev()) {
+                current.getNext().setPrev(prevNode.getPrev());
+                if (prevNode.getNext() != null) {
+                    prevNode.getPrev().setNext(current.getNext());
+                }
+                nextIndex--;
+            }
+            if (current.getNext() == prevNode.getPrev()) {
+                current.getPrev().setNext(prevNode.getNext());
+                if (prevNode.getNext() != null) {
+                    prevNode.getNext().setPrev(current.getNext());
+                }
+            }
+            prevNode = null;
+            size--;
         }
 
-        //удаляет элементу который прошли методом next или prev
+        //заменяет элемент который прошли методом next или prev
         @Override
         public void set(T t) {
-
+            if (prevNode == null)
+                throw new IllegalStateException();
+            if (prevNode.getNext() == current.getPrev()) {
+                current.getPrev().setValue(t);
+            }
+            if (current.getNext() == prevNode.getPrev()) {
+                current.getNext().setValue(t);
+            }
         }
 
-        //добавить эелемент после элемента который прошли методом next или prev
-        // в направлении куда шли.
+        //        Вставляет указанный элемент в список (необязательная операция). Элемент вставляется непосредственно перед
+//        элементом, который будет возвращен next, если таковой имеется, и после элемента, который будет возвращен
+//        previous, если таковой имеется. (Если список не содержит элементов, новый элемент становится единственным
+//        элементом в списке.)
+//        Новый элемент вставляется перед неявным курсором: последующий вызов next не будет затронут, а последующий
+//        вызов previous вернет новый элемент. ((Этот вызов увеличивает на единицу значение, которое будет возвращено
+//        вызовом следующего индекса или предыдущего индекса.)
         @Override
         public void add(T t) {
-
+            if (nextIndex == 0) {
+                insertFirst(t);
+                current.setPrev(first);
+            } else if (nextIndex == size) {
+                insertLast(t);
+                current.setPrev(last);
+            } else {
+                Node newNode = new Node(t);
+                newNode.setNext(current.getNext());
+                newNode.setPrev(current.getPrev());
+                current.setPrev(newNode);
+            }
+            nextIndex++;
+            size++;
         }
     }
 
