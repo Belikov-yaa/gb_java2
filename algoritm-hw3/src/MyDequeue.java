@@ -1,12 +1,12 @@
 import java.util.NoSuchElementException;
 
-public class MyQueue<T> {
+public class MyDequeue<T> {
     private T[] list;
     private int size;
     private int capacity;
     private final int DEFAULT_CAPACITY = 10;
-    private int begin;
-    private int end;
+    private int left;   // показывает на первый элемент слева
+    private int right; // показывает на следующее ПУСТОЕ место
 
     //0 1 2 3 4
     //b
@@ -14,7 +14,7 @@ public class MyQueue<T> {
     //8
 
 
-    public MyQueue(int capacity) throws IllegalArgumentException {
+    public MyDequeue(int capacity) throws IllegalArgumentException {
         if (capacity <= 0) {
             throw new IllegalArgumentException("capacity: " + capacity);
         }
@@ -22,7 +22,7 @@ public class MyQueue<T> {
         list = (T[]) new Object[capacity];
     }
 
-    public MyQueue() {
+    public MyDequeue() {
         this.capacity = DEFAULT_CAPACITY;
         list = (T[]) new Object[capacity];
     }
@@ -33,28 +33,53 @@ public class MyQueue<T> {
      * @param item добавляемый элемент
      * @throws IllegalStateException если очередь полная
      */
-    public void insert(T item) throws IllegalStateException {
+    public void insertLeft(T item) throws IllegalStateException {
         if (isFull()) {
             expandCapacity();
 //            throw new IllegalStateException("Очередь заполнена");
         }
         size++;
-        list[end] = item;
-        end = nextIndex(end);
+        left = prevIndex(left);
+        list[left] = item;
     }
 
-    public T peekFront() {
+    public void insertRight(T item) throws IllegalStateException {
+        if (isFull()) {
+            expandCapacity();
+//            throw new IllegalStateException("Очередь заполнена");
+        }
+        size++;
+        list[right] = item;
+        right = nextIndex(right);
+    }
+
+    public T peekLeft() {
         if (isEmpty()) {
             throw new NoSuchElementException();
         }
-        return list[begin];
+        return list[left];
     }
 
-    public T remove() {
-        T temp = peekFront();
+    public T peekRight() {
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        return list[prevIndex(right)];
+    }
+
+    public T removeLeft() {
+        T temp = peekLeft();
         size--;
-        list[begin] = null;
-        begin = nextIndex(begin);
+        list[left] = null;
+        left = nextIndex(left);
+        return temp;
+    }
+
+    public T removeRight() {
+        T temp = peekRight();
+        size--;
+        right = prevIndex(right);
+        list[right] = null;
         return temp;
     }
 
@@ -75,25 +100,29 @@ public class MyQueue<T> {
         return (index + 1) % list.length;
     }
 
+    private int prevIndex(int index) {
+        return (index - 1) < 0 ? list.length - 1 : index - 1;
+    }
+
     private void expandCapacity() {
         capacity += DEFAULT_CAPACITY;
         T[] newList = (T[]) new Comparable[capacity];
-        System.arraycopy(list, begin, newList, 0, size - begin);
-        if (begin > 0) System.arraycopy(list, 0, newList, size - begin, begin);
-        begin = 0;
-        end = size;
+        System.arraycopy(list, left, newList, 0, size - left);
+        if (left > 0) System.arraycopy(list, 0, newList, size - left, left);
+        left = 0;
+        right = size;
         list = newList;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("[ ");
-        int i = begin;
+        int i = left;
         if (size > 0) {
             do {
                 sb.append(list[i]).append(", ");
                 i = nextIndex(i);
-            } while (i != end);
+            } while (i != right);
             sb.setLength(sb.length() - 2);
         }
         sb.append(" ]");
