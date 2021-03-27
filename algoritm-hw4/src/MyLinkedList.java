@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
@@ -13,7 +14,7 @@ public class MyLinkedList<T> implements Iterable<T> {
         return new Iter();
     }
 
-    public ListIterator<T> listiterator() {
+    public ListIterator<T> listIterator() {
         return new ListIter();
     }
 
@@ -33,6 +34,10 @@ public class MyLinkedList<T> implements Iterable<T> {
     }
 
     private class ListIter extends Iter implements ListIterator<T> {
+        private int nextIndex;
+        private Node lastReturned;
+        private Node next;
+
         int index = 0;
 
         @Override
