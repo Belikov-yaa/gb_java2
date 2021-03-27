@@ -38,7 +38,15 @@ public class MyLinkedList<T> implements Iterable<T> {
         private Node lastReturned;
         private Node next;
 
-        int index = 0;
+        @Override
+        public T next() {
+            if (!hasNext())
+                throw new NoSuchElementException();
+            lastReturned = next;
+            next = next.next;
+            nextIndex++;
+            return lastReturned.value;
+        }
 
         @Override
         public boolean hasPrevious() {
@@ -47,29 +55,38 @@ public class MyLinkedList<T> implements Iterable<T> {
 
         @Override
         public T previous() {
-            return null;
+            if (!hasPrevious()) throw new NoSuchElementException();
+            lastReturned = next = (next == null) ? last : next.prev;
+            nextIndex--;
+            return lastReturned.value;
         }
 
         @Override
         public int nextIndex() {
-            return 0;
+            return nextIndex;
         }
 
         @Override
         public int previousIndex() {
-            return 0;
+            return nextIndex - 1;
         }
 
         //удаляет элемент который прошли методом next или prev
         @Override
         public void remove() {
+            if (lastReturned == null)
+                throw new IllegalStateException();
+//            if (lastReturned.next != null)
+
 
         }
+
         //удаляет элементу который прошли методом next или prev
         @Override
         public void set(T t) {
 
         }
+
         //добавить эелемент после элемента который прошли методом next или prev
         // в направлении куда шли.
         @Override
