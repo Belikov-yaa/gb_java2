@@ -25,7 +25,7 @@ public class Main {
 //            System.out.println(s);
 //        }
 
-        ListIterator<String> li = mll.listiterator();
+        ListIterator<String> li = mll.listIterator();
         while(li.hasNext()){
             System.out.println(li.next());
         }
