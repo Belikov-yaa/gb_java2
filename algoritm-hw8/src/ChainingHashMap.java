@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 public class ChainingHashMap<Key, Value> {
     private int capacity;
@@ -77,14 +78,30 @@ public class ChainingHashMap<Key, Value> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < capacity; i++) {
-            for (Node node : st[i]) {
-                sb.append(node.key).append(" ");
+            if (st[i].size() > 0) {
+                for (Node node : st[i]) {
+                    sb.append(node.key).append(" ");
+                }
+                sb.append(System.lineSeparator());
             }
-            sb.append(System.lineSeparator());
         }
 
         return sb.toString();
     }
 
     //реализовать метод удаления.
+    public Value delete(Key key) {
+        checkKeyNotNull(key);
+        int i = hash(key);
+        ListIterator<Node> listIterator = st[i].listIterator();
+        while (listIterator.hasNext()) {
+            Node temp = listIterator.next();
+            if (temp.key.equals(key)) {
+                listIterator.remove();
+                size--;
+                return temp.value;
+            }
+        }
+        return null;
+    }
 }
